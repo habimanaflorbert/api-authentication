@@ -5,11 +5,14 @@ from .selializers import *
 from .models import *
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-
+from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated
 # token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
+
+from rest_framework.parsers import JSONParser
+
 # Create your views here.
 
 class userView(viewsets.ModelViewSet):
@@ -58,3 +61,22 @@ def taskList(request):
     serializer =LangSeliarizer(taskss, many=True)
 
     return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated,))
+def taskDetail(request,id):
+    dt=Languages.objects.get(id=id)
+    serializer=LangSeliarizer(dt,many=False)
+    return JsonResponse(serializer.data)
+
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+def taskCreate(request):
+    data=JSONParser().parse(request)
+    print(data['name'])
+    return JsonResponse({'message':'Account Created sucessful'},status=201)
+
+# serializer = TaskSerializer(data=request.data)
+
+	# if serializer.is_valid():
+	# 	serializer.save()
