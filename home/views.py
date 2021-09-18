@@ -59,7 +59,6 @@ def taskList(request):
     print(acount)
     taskss= Languages.objects.all().order_by('-id')
     serializer =LangSeliarizer(taskss, many=True)
-
     return Response(serializer.data)
 
 @api_view(['GET'])
